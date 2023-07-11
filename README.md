@@ -3,7 +3,7 @@
 
 
 # Universal Neural-Cracking-Machines (UNCMs)
-Code and pre-trained model for the paper: *"Universal Neural-Cracking-Machines: Self-Configurable Password Models from Auxiliary Data"*
+Code and pre-trained models for the paper: *"Universal Neural-Cracking-Machines: Self-Configurable Password Models from Auxiliary Data"*
 
 🔥 [Working in progress....] All functionalities will be available soon. 🔥
 
