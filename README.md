@@ -16,7 +16,10 @@ Currently, we offer three models aimed at reproducing the results in the paper:
 
 Documentation on how to train, use, and evaluate the models (i.e., how to use *train.py* and *test.py*) and work with DP-UNCM **will be added within the next weeks**. 
 
-A simple "playground notebook" is given in *sampling_example.ipynb*.
+For now, we have: 
+
+* *sampling_example.ipynb*: An example on how to sample passwords from the models (not meant for password guessing).
+* *get_probability.ipynb*: An example on how to assign probability to plaintext passwords via UNCM (guess number computation will be added soon). 
 
 ## Requirements:
 

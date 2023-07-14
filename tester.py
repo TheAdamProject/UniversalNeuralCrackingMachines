@@ -136,7 +136,6 @@ class Tester:
     
         return seed
         
-        
     
     def compute_probability_from_file(self, path, return_X=False):
         
@@ -148,7 +147,7 @@ class Tester:
         
         if self.conditional:
             # compute seed 
-            seed, *pub_encoded = self.compute_seed(path)
+            seed = self.compute_seed(path)
         else:
             seed = None
             pub_encoded = None
@@ -157,7 +156,7 @@ class Tester:
             seed,
             ds_full,
             return_X=return_X
-        ), seed, pub_encoded
+        ), seed
         
     
     def compute_probability(self, seed, ds_full, return_X=False):
