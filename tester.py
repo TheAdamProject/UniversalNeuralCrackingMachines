@@ -19,48 +19,10 @@ def scoring(G, n=10):
     return scores
 
 
-class Tester:
-    """ Assign guess numbers and/or probabilities to passwords using Monte Carlo est. """
-    
-    def __init__(self, encoder, decoder, input_fn, hparams, log_probability=False):
-        
-        self.encoder, self.decoder = encoder, decoder
-        self.conditional = not self.encoder is None
-        
-        self.hparams = hparams.copy()
-        self.thparams = hparams['testing']
-        self.input_fn = input_fn
-        
-        if "sample_size" in self.thparams:
-            sample_size = self.thparams["sample_size"]
-            self.hparams["sample_size"] = sample_size
-
-        self.log_probability = log_probability
-        
-        #self.setup_theta()
-        self.u_p_theta = None
-    
-    @staticmethod
-    def _guess_number(P, theta_P, epsilon=0):
-        """ REMEMBER: move to -log p"""
-
-        def gnmc(pt, theta_P):
-            i = np.searchsorted(theta_P, pt)
-            gn = ( 1 / (theta_P[i:] * len(theta_P) + epsilon) ).sum()
-            return gn
-
-        n = len(P)
-        G = np.zeros(n)
-        for i in range(n):
-            G[i] = gnmc(P[i], theta_P)
-
-        return G
-    
-    @staticmethod
-    def plot_guess_number(
+def plot_guess_number(
         G,
         guessed_limit=1.,
-        guesses_limit=(10**1, 10**18),
+        guesses_limit=(10**3, 10**15),
         ax=None,
         x_lim=None,
         **plot_kargs
@@ -102,23 +64,56 @@ class Tester:
         );
 
         ax.legend()
-        ax.grid()
         return ax, x_lim
+
+
+class Tester:
+    """ Assign guess numbers and/or probabilities to passwords using Monte Carlo est. """
     
+    def __init__(
+        self,
+        encoder,
+        decoder,
+        input_fn,
+        hparams,
+        theta_file=None,
+        log_probability=False
+    ):
+        
+        self.encoder, self.decoder = encoder, decoder
+        self.conditional = not self.encoder is None
+        
+        self.hparams = hparams.copy()
+        self.thparams = hparams['testing']
+        self.input_fn = input_fn
+        
+        if "sample_size" in self.thparams:
+            sample_size = self.thparams["sample_size"]
+            self.hparams["sample_size"] = sample_size
+
+        self.log_probability = log_probability
+        
+        if theta_file is None:
+            self.p_theta = None
+        else:
+            self.p_theta = np.load(theta_file)
     
-    def setup_theta(self):
-        # get theta
-        self.hparams['batch_size'] = self.thparams['theta_size']
-        ds_for_theta, N = make_dataset(self.hparams['val_ds_dir'], self.hparams, conditional=False)
-        self.theta = ds_for_theta.take(1).get_single_element()
-        print("Size theta ---> ", len(self.theta['password']))
+    @staticmethod
+    def _guess_number(P, theta_P, epsilon=0):
+        """ REMEMBER: move to -log p"""
 
-        self.theta_ds = tf.data.Dataset.from_tensor_slices(self.theta) 
-        self.theta_ds = self.theta_ds.apply(
-            tf.data.experimental.dense_to_ragged_batch(self.thparams['decoder_batch_size'])
-        )
+        def gnmc(pt, theta_P):
+            i = np.searchsorted(theta_P, pt)
+            gn = ( 1 / (theta_P[i:] * len(theta_P) + epsilon) ).sum()
+            return gn
 
+        n = len(P)
+        G = np.zeros(n)
+        for i in range(n):
+            G[i] = gnmc(P[i], theta_P)
 
+        return G
+    
     
     def compute_seed(self, path):
         # get dataset for configuration seed
@@ -140,7 +135,7 @@ class Tester:
     def compute_probability_from_file(self, path, return_X=False):
         
         # get dataset to test
-        ds_full = read_and_parse_single_leak(path, self.hparams, False, shuffle=True)
+        ds_full = read_and_parse_single_leak(path, self.hparams, False, shuffle=False)
         ds_full = ds_full.apply(
             tf.data.experimental.dense_to_ragged_batch(self.thparams['decoder_batch_size'])
         )
@@ -189,46 +184,30 @@ class Tester:
             return X, P
         else:
             return P
-    
-    
-    def assing_probability_theta(self, seed=None):
         
-        return self.compute_probability(
-            seed,
-            self.theta_ds,
-        )
+        
+    def compute_and_save_theta_for_mc(self, seed):
+        print(f"Sampling theta for Monte Carlo guess number estimation (it might take a while....) Theta size is {self.thparams['theta_size']}")
+        _, p_theta = ancestral_sampling(
+                self.thparams['theta_size'],
+                self.decoder,
+                self.thparams['decoder_batch_size'],
+                self.hparams,
+                seed=seed,
+                with_string=False
+            )
+        p_theta.sort()
+        return p_theta
+    
     
     def compute_guess_numbers_from_file(self, path):
 
-        (X, P), seed, pub_encoded = self.compute_probability_from_file(path, return_X=True)
+        (X, P), seed = self.compute_probability_from_file(path, return_X=True)
 
-        if not self.conditional and self.u_p_theta is None:
-            # sample only the first time
-            _, self.u_p_theta = ancestral_sampling(
-                self.thparams['theta_size'],
-                self.decoder,
-                self.thparams['decoder_batch_size'],
-                self.hparams,
-                seed=seed,
-                with_string=False
-            )
-            self.u_p_theta.sort()  
-        p_theta = self.u_p_theta
-        
-        if self.conditional:
-            # sample only the first time
-            _, p_theta = ancestral_sampling(
-                self.thparams['theta_size'],
-                self.decoder,
-                self.thparams['decoder_batch_size'],
-                self.hparams,
-                seed=seed,
-                with_string=False
-            )
-            p_theta.sort()
+        if self.p_theta is None:
+            print("No precomputed theta.")
+            self.p_theta = self.compute_and_save_theta_for_mc(seed)
 
-        G = self._guess_number(P, p_theta)
+        G = self._guess_number(P, self.p_theta)
 
-        return X, G, P, seed, pub_encoded
-
-    
+        return X, G, P, seed

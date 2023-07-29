@@ -63,5 +63,12 @@ hparams['d1_vocab'], v_d1 = make_vocab(hparams['email_vocab_path'][1])
 hparams['train_ds_dir'] = os.path.join(hparams['dataset_dir_home'], DS_TRAIN_p)
 hparams['val_ds_dir'] = os.path.join(hparams['dataset_dir_home'], DS_VAL_p)
 
+# params for testing
+
+thparams = {
+    'theta_size' : 100000,
+    'decoder_batch_size' : 2048,
+}
 
 
+hparams['testing'] = thparams

@@ -3,9 +3,9 @@
 
 
 # Universal Neural-Cracking-Machines (UNCMs)
-Code and pre-trained models for the paper: *"Universal Neural-Cracking-Machines: Self-Configurable Password Models from Auxiliary Data"*
+Code and pre-trained models for the paper: *"Universal Neural-Cracking-Machines: Self-Configurable Password Models from Auxiliary Data"*  [🎉IEEE S&P'24🎉]  by [Dario Pasquini](https://pasquini-dario.github.io/me/), [Giuseppe Ateniese](https://ateniese.github.io), and [Carmela Troncoso](http://carmelatroncoso.com).
 
-🔥 **[Working in progress....] All functionalities will be available soon.** 🔥
+🔥 **80% of the basic functionalities is available. Work in progress...** 🔥
 
 ## Pre-trained models: 
 Currently, we offer three models aimed at reproducing the results in the paper:
@@ -18,8 +18,9 @@ Documentation on how to train, use, and evaluate the models (i.e., how to use *t
 
 For now, we have: 
 
-* *sampling_example.ipynb*: An example on how to sample passwords from the models (not meant for password guessing).
-* *get_probability.ipynb*: An example on how to assign probability to plaintext passwords via UNCM (guess number computation will be added soon). 
+* *sampling_example.ipynb*: Notebook on how to sample passwords from the models (not meant for password guessing).
+* *get_probability.ipynb*: Notebook on how to assign probabilities to plaintext passwords with a UNCM. 
+* *get_guess_numbers.ipynb*: Notebook on how to assign guess numbers to plaintext passwords with a UNCM. 
 
 ## Requirements:
 
