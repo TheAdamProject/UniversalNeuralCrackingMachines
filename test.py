@@ -22,11 +22,9 @@ def save_data(X, output_home, name_leak, name_run, data):
 
 if __name__ == '__main__':
     try:
-        conf_path_tester = sys.argv[1]
-        conf_path = sys.argv[2]
-        K = int(sys.argv[3])
+        conf_path = sys.argv[1]
     except:
-        print("[USAGE] tester_setup model_setup num_tests")
+        print("[USAGE] model_setup")
         sys.exit(1)
 
     # load model

@@ -1,5 +1,7 @@
 from .UNCM_medium import *
 
+hparams['sample_size'] = 2048
+
 # clipping sensitivity & noise mul 
 hparams['DP_params'] = (1., 3.)
 
