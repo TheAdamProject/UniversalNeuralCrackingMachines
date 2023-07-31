@@ -54,7 +54,7 @@ hparams['D'] = D
 
 hparams['max_len_username'] = hparams['max_len_passwd']
 
-hparams['email_vocab_path'] = ['./confings/vocabs/D0.txt', './confings/vocabs/D1.txt']
+hparams['email_vocab_path'] = ['./configs/vocabs/D0.txt', './configs/vocabs/D1.txt']
 
 hparams['char_username_vocab'] = make_vocab_passwords(is_username=True)[0]
 hparams['d0_vocab'], v_d0 = make_vocab(hparams['email_vocab_path'][0])
