@@ -5,7 +5,7 @@
 # 🌎 Universal Neural-Cracking-Machines (UNCMs)
 Code and pre-trained models for the paper: *"Universal Neural-Cracking-Machines: Self-Configurable Password Models from Auxiliary Data"*  [🎉IEEE S&P'24🎉]  by [Dario Pasquini](https://pasquini-dario.github.io/me/), [Giuseppe Ateniese](https://ateniese.github.io), and [Carmela Troncoso](http://carmelatroncoso.com).
 
-🔥 **All  the main functionalities are now available ** 🔥, but we are planning to add more stuff:
+🔥 **All  the main functionalities are now available** 🔥, but we are planning to add more stuff:
 
 #### Long term goals:
 
