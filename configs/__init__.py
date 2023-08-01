@@ -4,15 +4,16 @@ import os
 import UNCM
 from utils import *
 
-DS_TRAIN_p, DS_VAL_p = 'train/*.txt', 'clean_val/*.txt'
+DS_TRAIN_p, DS_VAL_p = 'train/*.txt', 'val/*.txt'
 
 hparams = {
+    
+    'dataset_dir_home' : "# PATH NEEDED HERE",
     
     'filters_dataset' : None,
     'conditional' : False,
     
-    'dataset_dir_home' : "# PATH NEEDED HERE",
-    'log_dir_home' :  "# PATH NEEDED HERE",
+    'log_dir_home' :  "./logs/",
     'keras_model_home' :  './keras_models',
 
     'max_len_passwd' : 32 + 1,

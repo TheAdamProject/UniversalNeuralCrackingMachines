@@ -10,7 +10,7 @@ if __name__ == '__main__':
         setup_module = sys.argv[1]
         name_run = setup_module.split('.')[-1]
     except:
-        print("[USAGE] setup_module(e.g., exp_setups.FLA)")
+        print("[USAGE] setup_module(e.g., exp_setups.UNCM)")
         sys.exit(1)
 
     setup = importlib.import_module(setup_module)

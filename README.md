@@ -2,10 +2,10 @@
 
 
 
-# 🌎 Universal Neural-Cracking-Machines (UNCMs)
+# 🌎 Universal Neural-Cracking-Machines  (UNCMs) 
 Code and pre-trained models for the paper: *"Universal Neural-Cracking-Machines: Self-Configurable Password Models from Auxiliary Data"*  [🎉IEEE S&P'24🎉]  by [Dario Pasquini](https://pasquini-dario.github.io/me/), [Giuseppe Ateniese](https://ateniese.github.io), and [Carmela Troncoso](http://carmelatroncoso.com).
 
-🔥 **All  the main functionalities are now available ** 🔥, but we are planning to add more stuff:
+🔥 **All  the main functionalities are now available** 🔥, but we are planning to add more stuff:
 
 #### Long term goals:
 
@@ -125,6 +125,74 @@ example1	gmail	com	password1
 example2	yahoo	com	password2
 ...
 ````
+
+## How to train your own UNCM:
+
+Everything begins with the creation of a configuration file, which should be placed in the directory *'./configs/'*. This config file serves as the blueprint for your model, encompassing various aspects such as architecture, data sources, and training log destinations. A collection of sample configuration files can be found in the *'./configs/'* directory. Additionally, the file *'./configs/\_\_init\_\_.py'* contains the majority of the default configurations. You have the flexibility to import *'\_\_init\_\_.py'* or other templates into your configuration and modify specific parameters according to your requirements.
+
+To illustrate, let's say you need a smaller password model for your UNCM. In this scenario, you can create a new configuration file named *'./configs/UNCM_small.py'* and redefine only the parameters that need to be changed.
+
+```
+from UNCM_medium import *
+
+hparams['decoder_arch']['rnn_size'] = 128
+```
+
+(If you want to train a UNCM, make sure that *hparams['conditional']* is set to *True*!)
+
+**Once you correctly prepared the training and validation data (see next section⬇️),** you can execute the training script by:
+
+```
+mkdir ./logs
+python train.py configs.UNCM_small
+```
+
+If all processes executed successfully, *TensorBoard* logs and checkpoints will be saved in *'./logs/UNCM_small/'* throughout the training, and the final model will be exported to *'./keras_models/UNCM_small/'*.
+
+###  Training and Validation data:
+
+Training and validation leak files must be placed in the path you assigned to the attribute *'hparams[dataset_dir_home]*' in ./configs/\_\_init\_\_.py.  For instance, you can set it to:
+
+```
+hparams = {
+    'dataset_dir_home' : "./data/",
+ ....
+```
+
+Within the path specified by *'hparams[dataset_dir_home]*', two additional directories, namely *'train/'* and *'val/'*, need to be created to accommodate the training and validation leaks.
+
+In these directories, each leak should be stored in a separate .txt file, adhering to the format described in the **"How to parse password leaks" ** section ⬆️. Your directory structure should look something like this: 
+
+```
+dataset_dir_home
+├──train
+│ ├── 01186mb.ca__NOHASH__Blogs.txt
+│ ├── 012.ca__NOHASH__Business.txt
+│ ├── 02asat.photoherald.com__HASH_NOHASH__Business.txt
+│ ├── 02grow.ca__HASH_NOHASH__NoCategory.txt
+│ ├── 030casting.de__HASH_NOHASH__Entertainment.txt
+│ ├── 039.ca__HASH_NOHASH__NoCategory.txt
+│ ├── 03designscommunications.ca__NOHASH__NoCategory.txt
+│ ├── 03pure.ca__HASH_NOHASH__NoCategory.txt
+│ ├── 0420.ca__NOHASH__NoCategory.txt
+│ ...
+└──val
+  ├── 059.ca__HASH_NOHASH__NoCategory.txt
+  ├── 07zr.ca__HASH_NOHASH__NoCategory.txt
+  ├── 0charges.com__NOHASH__Business.txt
+  ├── 1000literaryagents.com__NOHASH__Business.txt
+  ├── 100people.org__HASH_NOHASH__Reference.txt
+  ├── 112_delft.nl__HASH_NOHASH__Business.txt
+  ├── 123php.de__HASH_NOHASH__IT.txt
+  ├── 124sold.gr__HASH_NOHASH__Auction.txt
+	....
+```
+
+
+
+🚨 **The training set should be a heterogeneous collection of password leaks coming from different sources **🚨
+
+In the paper, the models were trained and evaluated on an extensive dataset comprising **11922** distinct password leaks! Training with a smaller dataset would not yield meaningful results.
 
 ## Requirements:
 
