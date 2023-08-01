@@ -190,7 +190,7 @@ dataset_dir_home
 
 
 
-🚨 **The training set should be a heterogeneous collection of password leaks coming from different sources **🚨
+🚨 **The training set should be a heterogeneous collection of password leaks coming from different sources** 🚨
 
 In the paper, the models were trained and evaluated on an extensive dataset comprising **11922** distinct password leaks! Training with a smaller dataset would not yield meaningful results.
 
