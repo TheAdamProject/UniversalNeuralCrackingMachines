@@ -42,15 +42,22 @@ def parse_string_non_areg(x, char_id_table):
     return x
 
 
-def read_and_parse_single_leak(path, hparams, conditional, shuffle=True):
+
+
+def read_and_parse_single_leak(path, hparams, conditional, shuffle=True, with_passwords=True):
    
     char_id_table = hparams['char_id_table']
 
-    
     @tf.function
     def parse_string(s):
         ss = tf.strings.split(s, '\t')
-        username, d0, d1, password, _ = ss[0], ss[1], ss[2], ss[3], ss[4:]
+        
+        username, d0, d1 = ss[0], ss[1], ss[2]
+        
+        if with_passwords:
+            password =  ss[3]
+        else:
+            password = ''
         
         username = tf.strings.lower(username)
         d0 = tf.strings.lower(d0)

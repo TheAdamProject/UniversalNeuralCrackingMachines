@@ -9,25 +9,26 @@ Code and pre-trained models for the paper: *"Universal Neural-Cracking-Machines:
 
 #### Long term goals:
 
-- [ ] Adding improved models trained on (hard) synthetic password leaks. 
-- [ ] Adding compressed and quantized pre-trained models for browser inference.
-- [ ] Adding JavaScript interface. 
-- [ ] Adding bigger pre-trained UNCMs for server-side estimation.
+- [ ] Adding JavaScript interface to use seeded password models in the browser.
+  - [ ] Adding compressed pre-trained models for browser inference
+
+- [ ] Adding improved models trained on (hard) synthetic password leaks 
+- [ ] Adding bigger pre-trained UNCMs for server-side estimation
 
 ## Download pre-trained models: 
 Currently, we offer three models aimed at reproducing the results in the paper:
 
-* [UNCM_medium_8096con_2048pm](https://drive.google.com/drive/folders/1Xf549jF6zo2zlZ4ZbfH3cxN_kEpSZm4K?usp=share_link): The standard UNCM.
+* [UNCM_medium_8096con_2048pm](https://drive.google.com/drive/folders/1Xf549jF6zo2zlZ4ZbfH3cxN_kEpSZm4K?usp=share_link): The standard UNCM
 * [Baseline](https://drive.google.com/drive/folders/19u2Ld3PWIvRZ9ejYCVD9dcoGsl6e8pKN?usp=share_link): Baseline model (non-conditional password model)
-* [DP-UNCM](https://drive.google.com/drive/folders/1wWi71UJrcObwoBt9GkH0Q-nbnDan_M4Y?usp=share_link): UNCM trained to handle DP configuration seeds. 
+* [DP-UNCM](https://drive.google.com/drive/folders/1wWi71UJrcObwoBt9GkH0Q-nbnDan_M4Y?usp=share_link): UNCM trained to handle DP configuration seeds
 
 ## How to use UNCMs:
 
 We have 3 playground notebooks: 
 
-* *sampling_example.ipynb*: Notebook on how to sample passwords from the models (not meant for password guessing).
-* *get_probability.ipynb*: Notebook on how to assign probabilities to plaintext passwords with a UNCM. 
-* *get_guess_numbers.ipynb*: Notebook on how to assign guess numbers to plaintext passwords with a UNCM. 
+* *sampling_example.ipynb*: Notebook on how to create and sample passwords from a seeded password models (not meant for password guessing).
+* *get_probability.ipynb*: Notebook on how to assign probabilities to plaintext passwords with a seeded password model. 
+* *get_guess_numbers.ipynb*: Notebook on how to assign guess numbers to plaintext passwords with a  seeded password model. 
 
 ### Compute guess numbers on plaintext passwords:
 
@@ -164,7 +165,7 @@ Within the path specified by *'hparams[dataset_dir_home]*', two additional direc
 In these directories, each leak should be stored in a separate .txt file, adhering to the format described in the **"How to parse password leaks" ** section ⬆️. Your directory structure should look something like this: 
 
 ```
-dataset_dir_home
+data
 ├──train
 │ ├── 01186mb.ca__NOHASH__Blogs.txt
 │ ├── 012.ca__NOHASH__Business.txt
@@ -190,9 +191,28 @@ dataset_dir_home
 
 
 
-🚨 **The training set should be a heterogeneous collection of password leaks coming from different sources **🚨
+🚨 **The training set should be a heterogeneous collection of password leaks coming from different sources** 🚨
 
 In the paper, the models were trained and evaluated on an extensive dataset comprising **11922** distinct password leaks! Training with a smaller dataset would not yield meaningful results.
+
+### Private UNCMs
+
+#### Training 
+
+To train your own UNCM capable of handling differentially private configuration seeds, it is enough to set the following attributes in the model configuration file:
+
+```
+hparams['encoder_arch']['mixarch_type'] = 10
+hparams['DP_params'] = (1., 3.)
+```
+
+*'mixarch_type'=10* tells the model to use the differentially private attention mechanism introduced in the paper.  The two values in *'DP_params'* can be arbitrarily chosen and are the **sensitivity bound on l2 norm** and **noise multiplier** respectively.  An example of configuration file can be found in *'configs/DP_UNCM_medium.py'*.
+
+Once configured the file, you can train the model following the *'How to train your own UNCM'* section.
+
+#### Inference
+
+If you set *'mixarch_type'=10'* during the training, the output of the configuration encoder will automatically become differentially private. This output can then be used just like any other seed. For an illustrative example, refer to '*get_guess_numbers.ipynb*'.  
 
 ## Requirements:
 
