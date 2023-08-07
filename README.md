@@ -16,11 +16,11 @@ Code and pre-trained models for the paper: *"Universal Neural-Cracking-Machines:
 - [ ] Adding bigger pre-trained UNCMs for server-side estimation
 
 ## Download pre-trained models: 
-Currently, we offer three models aimed at reproducing the results in the paper:
+Currently, we offer three models aimed at reproducing the results in the paper ([All models gdrive link](https://drive.google.com/drive/folders/1LKDbwM8l_RlRemkpxo1DKBiCn1jsXzN8?usp=share_link)):
 
-* [UNCM_medium_8096con_2048pm](https://drive.google.com/drive/folders/1Xf549jF6zo2zlZ4ZbfH3cxN_kEpSZm4K?usp=share_link): The standard UNCM
-* [Baseline](https://drive.google.com/drive/folders/19u2Ld3PWIvRZ9ejYCVD9dcoGsl6e8pKN?usp=share_link): Baseline model (non-conditional password model)
-* [DP-UNCM](https://drive.google.com/drive/folders/1wWi71UJrcObwoBt9GkH0Q-nbnDan_M4Y?usp=share_link): UNCM trained to handle DP configuration seeds
+* UNCM_medium_8096con_2048pm: The standard UNCM
+* Baseline: Baseline model (non-conditional password model)
+* DP-UNCM: UNCM trained to handle DP configuration seeds
 
 ## How to use UNCMs:
 
